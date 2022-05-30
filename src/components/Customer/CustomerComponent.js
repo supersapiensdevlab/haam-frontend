@@ -5,11 +5,16 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import axios from "axios";
 import { setCustomers } from "../../redux/actions/customerActions";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import Table, { AvatarCell, SelectColumnFilter, StatusPill } from "../Table"; // new
+import APIService from "../services/post.service";
 
 const CustomerComponent = () => {
   const customers = useSelector((state) => state.allCustomers.customers);
   const dispatch = useDispatch();
   const [show, setShow] = React.useState(false);
+  const [showDelete, setShowDelete] = React.useState(false);
+
   const [user, _setUser] = useState({});
 
   const handleModal = () => {
@@ -17,36 +22,40 @@ const CustomerComponent = () => {
     console.log("Modal Visibile ->", show);
   };
 
-  const api = axios.create({
-    baseURL: "http://localhost:3000/api",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-      "Access-Control-Allow-Headers":
-        "Content-Type, Authorization, Content-Length, X-Requested-With",
-    },
-  });
+  const handleDeleteModal = () => {
+    setShowDelete(!showDelete);
+    console.log("Delete Modal Visibile ->", show);
+  };
+
+  // const api = axios.create({
+  //   baseURL: "http://localhost:3000/api",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     "Access-Control-Allow-Origin": "*",
+  //     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+  //     "Access-Control-Allow-Headers":
+  //       "Content-Type, Authorization, Content-Length, X-Requested-With",
+  //   },
+  // });
 
   const updateCustomer = async (user) => {
-    const response = await api.post("/update-customer", user);
-    //console.log(response.data);
-    fetchCustomers();
+    APIService.updateCustomer(user).then((response) => {
+      console.log("Response from updateCustomer ->", response);
+      fetchCustomers();
+    });
   };
 
   const deleteCustomer = async (user) => {
-    console.log("Deleting, ", user);
-    await api.post("/delete-customer", user);
-
-    fetchCustomers();
+    APIService.deleteCustomer(user).then((response) => {
+      if (response) console.log("Deleted, ", user);
+      fetchCustomers();
+    });
   };
 
   const fetchCustomers = async () => {
-    const response = await axios
-      .get("http://localhost:3000/api/customers")
-      .catch((err) => console.log(err));
-    console.log(response.data);
-    dispatch(setCustomers(response.data));
+    APIService.fetchCustomers().then((response) => {
+      dispatch(setCustomers(response.data));
+    });
   };
 
   const renderList = customers.map((customer) => {
@@ -69,17 +78,21 @@ const CustomerComponent = () => {
         <td className="px-6 py-4">{customer.Phone || "-"}</td>
         <td className="px-6 py-4">{customer.RegisteredOn || "-"}</td>
 
-        <td className="px-6 py-4 text-right">
-          <p
+        <td className="px-6 py-4  flex align-middle items-center mt-4  text-center">
+          <FaTrash
             onClick={() => {
-              deleteCustomer(customer);
+              _setUser({
+                name: customer.Name,
+                email: customer.Email,
+                phone: customer.Phone,
+                customerId: customer.CustomerID,
+              });
+              handleDeleteModal();
             }}
-            className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3"
-          >
-            Delete
-          </p>
-
-          <p
+            className="h-6 w-6 text-orange-300 hover:text-orange-400 mx-2 cursor-pointer"
+            aria-hidden="true"
+          />
+          <FaEdit
             onClick={() => {
               _setUser({
                 name: customer.Name,
@@ -89,14 +102,119 @@ const CustomerComponent = () => {
               });
               handleModal();
             }}
-            className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline"
-          >
-            Update
-          </p>
+            className="h-6 w-6 text-orange-300 hover:text-orange-400 mx-2 cursor-pointer"
+            aria-hidden="true"
+          />
         </td>
       </tr>
     );
   });
+
+  const getData = () => {
+    const data = [
+      {
+        name: "Jane Cooper",
+        email: "jane.cooper@example.com",
+        title: "Regional Paradigm Technician",
+        department: "Optimization",
+        status: "Active",
+        role: "Admin",
+        age: 27,
+        imgUrl:
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      },
+      {
+        name: "Cody Fisher",
+        email: "cody.fisher@example.com",
+        title: "Product Directives Officer",
+        department: "Intranet",
+        status: "Inactive",
+        role: "Owner",
+        age: 43,
+        imgUrl:
+          "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      },
+      {
+        name: "Esther Howard",
+        email: "esther.howard@example.com",
+        title: "Forward Response Developer",
+        department: "Directives",
+        status: "Active",
+        role: "Member",
+        age: 32,
+        imgUrl:
+          "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      },
+      {
+        name: "Jenny Wilson",
+        email: "jenny.wilson@example.com",
+        title: "Central Security Manager",
+        department: "Program",
+        status: "Offline",
+        role: "Member",
+        age: 29,
+        imgUrl:
+          "https://images.unsplash.com/photo-1498551172505-8ee7ad69f235?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      },
+      {
+        name: "Kristin Watson",
+        email: "kristin.watson@example.com",
+        title: "Lean Implementation Liaison",
+        department: "Mobility",
+        status: "Inactive",
+        role: "Admin",
+        age: 36,
+        imgUrl:
+          "https://images.unsplash.com/photo-1532417344469-368f9ae6d187?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      },
+      {
+        name: "Cameron Williamson",
+        email: "cameron.williamson@example.com",
+        title: "Internal Applications Engineer",
+        department: "Security",
+        status: "Active",
+        role: "Member",
+        age: 24,
+        imgUrl:
+          "https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      },
+    ];
+    return [...data, ...data, ...data];
+  };
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "Name",
+        accessor: "name",
+        Cell: AvatarCell,
+        imgAccessor: "imgUrl",
+        emailAccessor: "email",
+      },
+      {
+        Header: "Title",
+        accessor: "title",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+        Cell: StatusPill,
+      },
+      {
+        Header: "Age",
+        accessor: "age",
+      },
+      {
+        Header: "Role",
+        accessor: "role",
+        Filter: SelectColumnFilter, // new
+        filter: "includes",
+      },
+    ],
+    []
+  );
+
+  const data = React.useMemo(() => getData(), []);
 
   return (
     <>
@@ -123,12 +241,18 @@ const CustomerComponent = () => {
                 <th scope="col" className="px-6 py-3">
                   Registered On
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 text-left">
+                  Actions
                   <span className="sr-only">Edit</span>
                 </th>
               </tr>
             </thead>
-            <tbody>{renderList}</tbody>
+            <tbody>
+              {/* <div className="mt-6">
+                <Table columns={columns} data={data} />
+              </div> */}
+              {renderList}
+            </tbody>
           </table>
         </div>
       </div>
@@ -298,6 +422,32 @@ const CustomerComponent = () => {
               Save
             </div>
           </Modal.Footer> */}
+      </Modal>
+
+      <Modal show={showDelete} onHide={handleDeleteModal}>
+        <Modal.Header className="font-bold" closeButton>
+          Add Customer
+        </Modal.Header>
+
+        <div className=" p-3">
+          <p>
+            Are you sure you want to delete <bold>{user.Name}</bold>?
+          </p>
+          <div className="flex w-full ">
+            <div
+              onClick={() => {
+                deleteCustomer(user);
+                handleDeleteModal();
+              }}
+              className="button bg-orange-400 hover:bg-orange-500 rounded px-2 mx-2 text-white cursor-pointer"
+            >
+              Yes
+            </div>
+            <div className="button bg-blue-100 hover:bg-blue-200 rounded px-2 mx-2 cursor-pointer">
+              No
+            </div>
+          </div>
+        </div>
       </Modal>
     </>
   );

@@ -54,7 +54,7 @@ const ProductListing = () => {
           </Modal.Header>
 
           <div className=" ">
-            <div className=" grid-cols-3 md:gap-6">
+            <div className=" grid-cols-3   md:gap-6">
               <div className="  md:col-span-3">
                 <form action="#" method="POST">
                   <div className="shadow overflow-hidden sm:rounded-md">

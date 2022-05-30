@@ -7,15 +7,12 @@ import { setUser } from "../../redux/actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import AuthService from "../services/auth.service";
-import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [user, _setUser] = useState({});
   const [isRemembered, setIsRemembered] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const api = axios.create({
     baseURL: "http://localhost:3000/api",
@@ -28,21 +25,10 @@ function LoginPage() {
     },
   });
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      await AuthService.login(user.email, user.password).then(
-        () => {
-          navigate("/dashboard");
-          window.location.reload();
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
+  const registeruser = async (user) => {
+    const response = await api.post("/register", user);
+    //console.log(response.data);
+    dispatch(setUser(response.data));
   };
 
   const handleIsRemembered = (e) => {
@@ -69,11 +55,29 @@ function LoginPage() {
                   href=" "
                   className="font-medium text-orange-500 hover:text-orange-400 text-center"
                 >
-                  Hello there, sign in to continue!
+                  Hello there, sign up to continue!
                 </p>
               </div>
               <div>
-                <div className="  shadow-sm -space-y-px my-4 ">
+                <div className="rounded-md shadow-sm -space-y-px my-4">
+                  <div>
+                    <label htmlFor="email-address" className="sr-only">
+                      Full Name
+                    </label>
+                    <input
+                      id="full-name"
+                      name="name"
+                      type="text"
+                      autoComplete="name"
+                      required
+                      onChange={(e) =>
+                        _setUser({ ...user, name: e.target.value })
+                      }
+                      value={user.name}
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-orange-400 focus:border-orange-400 focus:z-10 sm:text-sm"
+                      placeholder="Full Name"
+                    />
+                  </div>
                   <div>
                     <label htmlFor="email-address" className="sr-only">
                       Email address
@@ -88,11 +92,28 @@ function LoginPage() {
                         _setUser({ ...user, email: e.target.value })
                       }
                       value={user.email}
-                      className=" rounded-t-md appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900   focus:outline-none focus:ring-orange-400 focus:border-orange-400 focus:z-10 sm:text-sm"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900   focus:outline-none focus:ring-orange-400 focus:border-orange-400 focus:z-10 sm:text-sm"
                       placeholder="Email address"
                     />
                   </div>
-
+                  <div>
+                    <label htmlFor="phone-number" className="sr-only">
+                      Phone Number
+                    </label>
+                    <input
+                      id="phone-number"
+                      name="phone"
+                      type="phone"
+                      autoComplete="phone"
+                      required
+                      onChange={(e) =>
+                        _setUser({ ...user, phone: e.target.value })
+                      }
+                      value={user.phone}
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900   focus:outline-none focus:ring-orange-400 focus:border-orange-400 focus:z-10 sm:text-sm"
+                      placeholder="Phone Number"
+                    />
+                  </div>
                   <div>
                     <label htmlFor="password" className="sr-only">
                       Password
@@ -107,13 +128,31 @@ function LoginPage() {
                         _setUser({ ...user, password: e.target.value })
                       }
                       value={user.password}
-                      className="rounded-b-md  appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-orange-400 focus:border-orange-400 focus:z-10 sm:text-sm"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-orange-400 focus:border-orange-400 focus:z-10 sm:text-sm"
                       placeholder="Password"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="password" className="sr-only">
+                      Confirm Password
+                    </label>
+                    <input
+                      id="confirm"
+                      name="confirm"
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      onChange={(e) =>
+                        _setUser({ ...user, confirm: e.target.value })
+                      }
+                      value={user.confirm}
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-orange-400 focus:border-orange-400 focus:z-10 sm:text-sm"
+                      placeholder="Confirm Password"
                     />
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between my-3">
+                <div className="flex items-center justify-between my-3 hidden">
                   <div className="flex items-center">
                     <input
                       id="remember-me"
@@ -144,7 +183,9 @@ function LoginPage() {
 
                 <div>
                   <button
-                    onClick={handleLogin}
+                    onClick={() => {
+                      registeruser(user);
+                    }}
                     className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-400 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400"
                   >
                     <span className="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -153,7 +194,7 @@ function LoginPage() {
                         aria-hidden="true"
                       />
                     </span>
-                    Login
+                    Register
                   </button>
                 </div>
 
@@ -166,9 +207,9 @@ function LoginPage() {
                 </div>
 
                 <p className="   text-sm text-center">
-                  Don't have an account?
+                  Already have an account?
                   <span className="text-orange-500 hover:text-orange-400 font-semibold ml-1">
-                    <Link to="/register">Sign up</Link>
+                    <Link to="/login">Sign in</Link>
                   </span>
                 </p>
               </div>

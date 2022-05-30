@@ -7,6 +7,7 @@ import CustomerComponent from "./CustomerComponent";
 import { Modal, Button } from "react-bootstrap";
 import { useState } from "react";
 import { setUser } from "../../redux/actions/userActions";
+import APIService from "../services/post.service";
 
 const CustomerListing = () => {
   const customers = useSelector((state) => state);
@@ -38,11 +39,9 @@ const CustomerListing = () => {
   };
 
   const fetchCustomers = async () => {
-    const response = await axios
-      .get("http://localhost:3000/api/customers")
-      .catch((err) => console.log(err));
-    console.log(response.data);
-    dispatch(setCustomers(response.data));
+    APIService.fetchCustomers().then((response) => {
+      dispatch(setCustomers(response.data));
+    });
   };
 
   useEffect(() => {
