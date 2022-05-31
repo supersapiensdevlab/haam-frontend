@@ -32,9 +32,10 @@ function LoginPage() {
     e.preventDefault();
     try {
       await AuthService.login(user.email, user.password).then(
-        () => {
+        (data) => {
+          console.log(data)
           navigate("/dashboard");
-          window.location.reload();
+          dispatch(setUser(data));
         },
         (error) => {
           console.log(error);

@@ -7,16 +7,16 @@ export const registerUser = (products) => {
   };
 };
 
-export const getUser = (product) => {
+export const getUser = (userdata) => {
   return {
     type: actionTypes.GET_USER,
-    payload: product,
+    payload: userdata,
   };
 };
 
-export const setUser = (product) => {
+export const setUser = (userdata) => {
   return {
     type: actionTypes.SET_USER,
-    payload: product,
+    payload: userdata,
   };
 };

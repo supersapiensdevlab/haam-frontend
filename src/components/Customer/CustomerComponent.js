@@ -7,7 +7,7 @@ import axios from "axios";
 import { setCustomers } from "../../redux/actions/customerActions";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Table, { AvatarCell, SelectColumnFilter, StatusPill } from "../Table"; // new
-import APIService from "../services/post.service";
+import postService from "../services/post.service";
 
 const CustomerComponent = () => {
   const customers = useSelector((state) => state.allCustomers.customers);
@@ -23,7 +23,7 @@ const CustomerComponent = () => {
   };
 
   const handleDeleteModal = () => {
-    setShowDelete(!showDelete);
+    setShowDelete((val)=>!val);
     console.log("Delete Modal Visibile ->", show);
   };
 
@@ -39,21 +39,22 @@ const CustomerComponent = () => {
   // });
 
   const updateCustomer = async (user) => {
-    APIService.updateCustomer(user).then((response) => {
+    postService.updateCustomer(user).then((response) => {
       console.log("Response from updateCustomer ->", response);
       fetchCustomers();
     });
   };
 
   const deleteCustomer = async (user) => {
-    APIService.deleteCustomer(user).then((response) => {
+    console.log(user);
+    postService.deleteCustomer(user).then((response) => {
       if (response) console.log("Deleted, ", user);
       fetchCustomers();
     });
   };
 
   const fetchCustomers = async () => {
-    APIService.fetchCustomers().then((response) => {
+    postService.fetchCustomers().then((response) => {
       dispatch(setCustomers(response.data));
     });
   };

@@ -7,11 +7,12 @@ import { setUser } from "../../redux/actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [user, _setUser] = useState({});
   const [isRemembered, setIsRemembered] = useState(false);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const api = axios.create({
@@ -27,8 +28,8 @@ function LoginPage() {
 
   const registeruser = async (user) => {
     const response = await api.post("/register", user);
+    navigate("/login");
     //console.log(response.data);
-    dispatch(setUser(response.data));
   };
 
   const handleIsRemembered = (e) => {

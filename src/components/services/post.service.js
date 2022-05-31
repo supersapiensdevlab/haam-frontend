@@ -17,13 +17,13 @@ const api = axios.create({
 });
 
 const updateCustomer = async (user) => {
-  const response = await api.post("/update-customer", user);
+  const response = await api.post("/update-customer", user,{headers:{'x-auth-token':JSON.parse(localStorage.getItem('user')).accessToken}});
   return response.data;
 };
 
 const deleteCustomer = async (user) => {
   console.log("Deleting, ", user);
-  await api.post("/delete-customer", user);
+  await api.post("/delete-customer", user,{headers:{'x-auth-token':JSON.parse(localStorage.getItem('user')).accessToken}});
 
   return true;
 };
@@ -41,6 +41,7 @@ const postService = {
   getAllPrivatePosts,
   updateCustomer,
   fetchCustomers,
+  deleteCustomer
 };
 
 export default postService;
