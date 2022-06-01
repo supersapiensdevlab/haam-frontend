@@ -18,7 +18,7 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: `${process.env.REACT_APP_SERVER_URL}/api`,
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

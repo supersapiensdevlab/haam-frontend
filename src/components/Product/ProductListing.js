@@ -22,7 +22,7 @@ const ProductListing = () => {
 
   const fetchProducts = async () => {
     const response = await axios
-      .get("http://localhost:3000/api/products")
+      .get(`${process.env.REACT_APP_SERVER_URL}/api/products`)
       .catch((err) => console.log(err));
     dispatch(setProducts(response.data));
   };

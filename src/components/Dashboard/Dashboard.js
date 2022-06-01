@@ -31,24 +31,7 @@ const Dashboard = () => {
         <SideNav />
         <Outlet></Outlet>
       </div>
-      {/* 
-          <Route
-            path="products"
-            exact
-            element={
-              <>
-                <div className="grid grid-cols-12 w-full">
-                  <div className="col-span-12 ">
-                    <div className="flex flex-col w-full px-5">
-                      <ProductListing />
-                    </div>
-                  </div>
-                </div>
-              </>
-            }
-          >
-            {" "}
-          </Route> */}
+
     </>
   );
 };
