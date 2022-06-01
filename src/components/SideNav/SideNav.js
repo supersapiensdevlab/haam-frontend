@@ -5,6 +5,10 @@ import ProductListing from "../Product/ProductListing";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CustomerListing from "../Customer/CustomerListing";
 import { Link } from "react-router-dom";
+import Home from '../../icons/Home.svg';
+import User from '../../icons/User.svg';
+import Box from '../../icons/Box.svg';
+import Cog from '../../icons/Cog.svg';
 
 const SideNav = () => {
   return (
@@ -13,12 +17,12 @@ const SideNav = () => {
         <Link
           className="text-black 2xl:text-xl lg:text-md text-bold dark:text-white  "
           id="inventory"
-          to="/products"
+          to="/dashboard/products"
         >
           <div className=" flex">
             <div className="w-1.5 bg-orange-500 rounded-r-3xl my-2"></div>
             <img
-              src="icons/Home.svg"
+              src={Home}
               alt="home"
               className="h-8 w-8 mx-auto my-4"
             ></img>
@@ -27,24 +31,24 @@ const SideNav = () => {
         <Link
           className="text-black 2xl:text-xl lg:text-md text-bold dark:text-white  "
           id="customer"
-          to="/customers"
+          to="/dashboard/customers"
         >
           <div className=" flex">
             <div className="w-1.5 bg-orange-500 rounded-r-3xl my-2 hidden"></div>
             <img
-              src="icons/User.svg"
+              src={User}
               alt="home"
               className="h-8 w-8 mx-auto my-4"
             ></img>
           </div>
         </Link>
         <img
-          src="icons/Box.svg"
+          src={Box}
           alt="box"
           className="h-8 w-8 mx-auto my-4"
         ></img>
         <img
-          src="icons/Cog.svg"
+          src={Cog}
           alt="cog"
           className="h-8 w-8 mx-auto my-4"
         ></img>

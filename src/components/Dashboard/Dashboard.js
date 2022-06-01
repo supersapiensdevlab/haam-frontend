@@ -7,7 +7,8 @@ import CustomerListing from "../Customer/CustomerListing";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
-
+import { Outlet } from "react-router-dom";
+import SideNav from "../SideNav/SideNav";
 const Dashboard = () => {
   const [currentUser, setCurrentUser] = useState(undefined);
 
@@ -26,30 +27,13 @@ const Dashboard = () => {
   return (
     <>
       <Header></Header>
-      <div className="flex ">
-        <Routes>
+      <div className="flex gap-4">
+        <SideNav />
+        <Outlet></Outlet>
+      </div>
+      {/* 
           <Route
-            path="/customers"
-            exact
-            element={
-              <>
-                <div className="grid grid-cols-12 w-full">
-                  <div className="col-span-12 ">
-                    <div className="flex flex-col w-full px-5">
-                      <CustomerListing />
-                    </div>
-                  </div>
-                </div>
-              </>
-            }
-          >
-            {" "}
-          </Route>
-        </Routes>
-
-        <Routes>
-          <Route
-            path="/products"
+            path="products"
             exact
             element={
               <>
@@ -64,9 +48,7 @@ const Dashboard = () => {
             }
           >
             {" "}
-          </Route>
-        </Routes>
-      </div>
+          </Route> */}
     </>
   );
 };

@@ -31,60 +31,27 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route
-            path="/productlisting"
-            exact
-            element={
-              <>
-                <Header />
-                <ProductListing />
-              </>
-            }
-          ></Route>
-        </Routes>
-
-        <Routes>
-          <Route path="/dashboard" exact element={<Dashboard />}></Route>
-        </Routes>
-
-        <Routes>
-          <Route
-            path="/customers"
-            exact
-            element={
-              <>
-                <Header />
-                <div className="flex gap-4">
-                  <SideNav />
-                  <CustomerListing />
-                </div>
-              </>
-            }
-          ></Route>
-        </Routes>
-
-        <Routes>
-          <Route
-            path="/products"
-            exact
-            element={
-              <>
-                <Header />
-                <div className="flex gap-4">
-                  <SideNav />
+          <Route path="/">
+            <Route
+              path="productlisting"
+              exact
+              element={
+                <>
+                  <Header />
                   <ProductListing />
-                </div>
-              </>
-            }
-          ></Route>
-        </Routes>
+                </>
+              }
+            ></Route>
 
-        <Routes>
-          <Route path="/register" exact element={<RegisterPage />} />
-        </Routes>
+            <Route path="dashboard" element={<Dashboard />}>
+              <Route path="customers" element={<CustomerListing />}></Route>
+              <Route path="products" element={<ProductListing />}></Route>
+            </Route>
 
-        <Routes>
-          <Route path="/login" exact element={<LoginPage />} />
+            <Route path="register" exact element={<RegisterPage />} />
+
+            <Route path="login" exact element={<LoginPage />} />
+          </Route>
         </Routes>
       </Router>
     </>
