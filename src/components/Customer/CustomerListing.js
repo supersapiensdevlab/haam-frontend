@@ -34,7 +34,6 @@ const CustomerListing = () => {
   const registeruser = async (user) => {
     const response = await api.post("/register", user);
     console.log(response.data);
-    dispatch(setUser(response.data));
     fetchCustomers();
   };
 

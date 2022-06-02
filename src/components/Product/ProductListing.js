@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import DropDown from "../DropDown/DropDown";
@@ -14,7 +14,16 @@ const ProductListing = () => {
   const products = useSelector((state) => state);
   const dispatch = useDispatch();
   const [show, setShow] = React.useState(false);
-
+  const [product, setProduct] = useState({
+    name: "",
+    price: 0,
+    description: "",
+    image: "",
+    category: "United States",
+    type: "United States",
+    size: "",
+    quantity: 0,
+  });
   const handleModal = () => {
     setShow(!show);
     console.log("Modal Visibile ->", show);
@@ -31,6 +40,30 @@ const ProductListing = () => {
     fetchProducts();
   }, []);
 
+  // After add product Click 
+  const handleSubmit =async (e) =>{
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("image", product.image);
+    formData.append("name", product.name);
+    formData.append("price", product.price);
+    formData.append("description", product.description);
+    formData.append("category", product.category);
+    formData.append("type", product.type);
+    formData.append("size", product.size);
+    formData.append("quantity", product.quantity);
+  
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/product`,
+        formData,{headers:{'x-auth-token':JSON.parse(localStorage.getItem('user')).accessToken}}
+      );
+      console.log(res);
+    } catch (ex) {
+      console.log(ex);
+    }
+    console.log(product);
+  }
   return (
     <>
       <div className="flex flex-col w-full pt-5">
@@ -56,7 +89,7 @@ const ProductListing = () => {
           <div className=" ">
             <div className=" grid-cols-3   md:gap-6">
               <div className="  md:col-span-3">
-                <form action="#" method="POST">
+                <form onSubmit={handleSubmit} method="POST">
                   <div className="shadow overflow-hidden sm:rounded-md">
                     <div className="  bg-white px-6">
                       <div className="  py-5">
@@ -90,6 +123,7 @@ const ProductListing = () => {
                                   name="file-upload"
                                   type="file"
                                   className="sr-only"
+                                  onChange={(e)=>{setProduct({...product,image:e.target.files[0]})}}
                                 />
                               </label>
                               <p className="pl-1">or drag and drop</p>
@@ -112,6 +146,8 @@ const ProductListing = () => {
                             type="text"
                             name="first-name"
                             id="first-name"
+                            value={product.name}
+                            onChange={(e)=>{setProduct({...product,name:e.target.value})}}
                             autoComplete="given-name"
                             className="mt-1 focus:ring-orange-500 focus:border-orange-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                           />
@@ -127,12 +163,14 @@ const ProductListing = () => {
                           <select
                             id="country"
                             name="country"
+                            value={product.category}
+                            onChange={(e)=>{setProduct({...product,category:e.target.value})}}
                             autoComplete="country-name"
                             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                           >
-                            <option>United States</option>
-                            <option>Canada</option>
-                            <option>Mexico</option>
+                            <option selected value="United States">United States</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Mexico">Mexico</option>
                           </select>
                         </div>
 
@@ -145,13 +183,15 @@ const ProductListing = () => {
                           </label>
                           <select
                             id="country"
+                            value={product.type}
+                            onChange={(e)=>{setProduct({...product,type:e.target.value})}}
                             name="country"
                             autoComplete="country-name"
                             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                           >
-                            <option>United States</option>
-                            <option>Canada</option>
-                            <option>Mexico</option>
+                           <option selected value="United States">United States</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Mexico">Mexico</option>
                           </select>
                         </div>
 
@@ -163,7 +203,9 @@ const ProductListing = () => {
                             Price
                           </label>
                           <input
-                            type="text"
+                            type="number"
+                            value={product.price}
+                            onChange={(e)=>{setProduct({...product,price:e.target.value})}}
                             name="email-address"
                             id="email-address"
                             autoComplete="email"
@@ -180,6 +222,8 @@ const ProductListing = () => {
                           </label>
                           <input
                             type="text"
+                            value={product.size}
+                            onChange={(e)=>{setProduct({...product,size:e.target.value})}}
                             name="email-address"
                             id="email-address"
                             autoComplete="email"
@@ -196,6 +240,8 @@ const ProductListing = () => {
                           </label>
                           <input
                             type="text"
+                            value={product.quantity}
+                            onChange={(e)=>{setProduct({...product,quantity:e.target.value})}}
                             name="email-address"
                             id="email-address"
                             autoComplete="email"
@@ -213,6 +259,8 @@ const ProductListing = () => {
                           <div className="mt-1">
                             <textarea
                               id="about"
+                              value={product.description}
+                              onChange={(e)=>{setProduct({...product,description:e.target.value})}}
                               name="about"
                               rows={2}
                               className="shadow-sm focus:ring-orange-500 focus:border-orange-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
