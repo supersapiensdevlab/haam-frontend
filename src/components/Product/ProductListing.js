@@ -19,8 +19,8 @@ const ProductListing = () => {
     price: 0,
     description: "",
     image: "",
-    category: "United States",
-    type: "United States",
+    category: "0",
+    type: "0",
     size: "",
     quantity: 0,
   });
@@ -40,8 +40,8 @@ const ProductListing = () => {
     fetchProducts();
   }, []);
 
-  // After add product Click 
-  const handleSubmit =async (e) =>{
+  // After add product Click
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("image", product.image);
@@ -52,18 +52,24 @@ const ProductListing = () => {
     formData.append("type", product.type);
     formData.append("size", product.size);
     formData.append("quantity", product.quantity);
-  
+
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/product`,
-        formData,{headers:{'x-auth-token':JSON.parse(localStorage.getItem('user')).accessToken}}
+        formData,
+        {
+          headers: {
+            "x-auth-token": JSON.parse(localStorage.getItem("user"))
+              .accessToken,
+          },
+        }
       );
       console.log(res);
+      fetchProducts();
     } catch (ex) {
       console.log(ex);
     }
-    console.log(product);
-  }
+  };
   return (
     <>
       <div className="flex flex-col w-full pt-5">
@@ -98,20 +104,25 @@ const ProductListing = () => {
                         </label>
                         <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                           <div className="space-y-1 text-center">
-                            <svg
-                              className="mx-auto h-12 w-12 text-gray-400"
-                              stroke="currentColor"
-                              fill="none"
-                              viewBox="0 0 48 48"
-                              aria-hidden="true"
-                            >
-                              <path
-                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                strokeWidth={2}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
+                            {product.image ? (
+                              <img className="h-32" src={URL.createObjectURL(product.image)}></img>
+                            ) : (
+                              <svg
+                                className="mx-auto h-12 w-12 text-gray-400"
+                                stroke="currentColor"
+                                fill="none"
+                                viewBox="0 0 48 48"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                  strokeWidth={2}
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            )}
+
                             <div className="flex text-sm text-gray-400">
                               <label
                                 htmlFor="file-upload"
@@ -123,7 +134,13 @@ const ProductListing = () => {
                                   name="file-upload"
                                   type="file"
                                   className="sr-only"
-                                  onChange={(e)=>{setProduct({...product,image:e.target.files[0]})}}
+                                  onChange={(e) => {
+                                    setProduct({
+                                      ...product,
+                                      image: e.target.files[0],
+                                    });
+                                 
+                                  }}
                                 />
                               </label>
                               <p className="pl-1">or drag and drop</p>
@@ -147,7 +164,9 @@ const ProductListing = () => {
                             name="first-name"
                             id="first-name"
                             value={product.name}
-                            onChange={(e)=>{setProduct({...product,name:e.target.value})}}
+                            onChange={(e) => {
+                              setProduct({ ...product, name: e.target.value });
+                            }}
                             autoComplete="given-name"
                             className="mt-1 focus:ring-orange-500 focus:border-orange-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                           />
@@ -164,13 +183,20 @@ const ProductListing = () => {
                             id="country"
                             name="country"
                             value={product.category}
-                            onChange={(e)=>{setProduct({...product,category:e.target.value})}}
+                            onChange={(e) => {
+                              setProduct({
+                                ...product,
+                                category: e.target.value,
+                              });
+                            }}
                             autoComplete="country-name"
                             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                           >
-                            <option selected value="United States">United States</option>
-                            <option value="Canada">Canada</option>
-                            <option value="Mexico">Mexico</option>
+                            <option selected value="1">
+                              United States
+                            </option>
+                            <option value="2">Canada</option>
+                            <option value="3">Mexico</option>
                           </select>
                         </div>
 
@@ -184,14 +210,18 @@ const ProductListing = () => {
                           <select
                             id="country"
                             value={product.type}
-                            onChange={(e)=>{setProduct({...product,type:e.target.value})}}
+                            onChange={(e) => {
+                              setProduct({ ...product, type: e.target.value });
+                            }}
                             name="country"
                             autoComplete="country-name"
                             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                           >
-                           <option selected value="United States">United States</option>
-                            <option value="Canada">Canada</option>
-                            <option value="Mexico">Mexico</option>
+                            <option selected value="1">
+                              United States
+                            </option>
+                            <option value="2">Canada</option>
+                            <option value="3">Mexico</option>
                           </select>
                         </div>
 
@@ -205,7 +235,9 @@ const ProductListing = () => {
                           <input
                             type="number"
                             value={product.price}
-                            onChange={(e)=>{setProduct({...product,price:e.target.value})}}
+                            onChange={(e) => {
+                              setProduct({ ...product, price: e.target.value });
+                            }}
                             name="email-address"
                             id="email-address"
                             autoComplete="email"
@@ -223,7 +255,9 @@ const ProductListing = () => {
                           <input
                             type="text"
                             value={product.size}
-                            onChange={(e)=>{setProduct({...product,size:e.target.value})}}
+                            onChange={(e) => {
+                              setProduct({ ...product, size: e.target.value });
+                            }}
                             name="email-address"
                             id="email-address"
                             autoComplete="email"
@@ -241,7 +275,12 @@ const ProductListing = () => {
                           <input
                             type="text"
                             value={product.quantity}
-                            onChange={(e)=>{setProduct({...product,quantity:e.target.value})}}
+                            onChange={(e) => {
+                              setProduct({
+                                ...product,
+                                quantity: e.target.value,
+                              });
+                            }}
                             name="email-address"
                             id="email-address"
                             autoComplete="email"
@@ -260,7 +299,12 @@ const ProductListing = () => {
                             <textarea
                               id="about"
                               value={product.description}
-                              onChange={(e)=>{setProduct({...product,description:e.target.value})}}
+                              onChange={(e) => {
+                                setProduct({
+                                  ...product,
+                                  description: e.target.value,
+                                });
+                              }}
                               name="about"
                               rows={2}
                               className="shadow-sm focus:ring-orange-500 focus:border-orange-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
