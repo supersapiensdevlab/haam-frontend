@@ -69,9 +69,13 @@ const CustomerComponent = () => {
           {customer.CustomerID}
         </th>
         <td className="px-6 py-4">
-          <img
+        <img
             className="rounded w-24 h-2w-24"
-            src={customer.ProductImage || "https://picsum.photos/200"}
+            src={
+              customer.Image
+                ? `${process.env.REACT_APP_SERVER_URL}/uploads/${customer.Image}`
+                : "https://picsum.photos/200"
+            }
           ></img>
         </td>
         <td className="px-6 py-4"> {customer.Name}</td>

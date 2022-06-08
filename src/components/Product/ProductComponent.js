@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../../redux/actions/productActions";
-const ProductComponent = () => {
+const ProductComponent = ({ filterPrice, filterType, filterCategory }) => {
   const dispatch = useDispatch();
   const fetchProducts = async () => {
     const response = await axios
@@ -12,6 +12,7 @@ const ProductComponent = () => {
       .catch((err) => console.log(err));
     dispatch(setProducts(response.data));
   };
+
   // For Update Modal
 
   const [show, setShow] = React.useState(false);
@@ -71,9 +72,35 @@ const ProductComponent = () => {
       console.log(err);
     }
   };
-
+  const categories = useSelector((state) => state.options.category);
+  const types = useSelector((state) => state.options.type);
   const products = useSelector((state) => state.allProducts.products);
   const renderList = products.map((product) => {
+    if (filterCategory) {
+      if (product.CategoryID != filterCategory) {
+        return null;
+      }
+    }
+    if (filterType) {
+      if (product.Type != filterType) {
+        return null;
+      }
+    }
+    if (filterPrice) {
+      if (product.UnitPrice < filterPrice.start) {
+        return null;
+      }
+
+      if (filterPrice.end) {
+        if (product.UnitPrice > filterPrice.end) {
+          return null;
+        }
+      }
+    }
+
+    let catname = categories.find((c) => c.id == product.CategoryID);
+    let typename = types.find((t) => t.id == product.Type);
+
     return (
       <tr
         key={product.ProductID}
@@ -93,9 +120,9 @@ const ProductComponent = () => {
           ></img>
         </td>
         <td className="px-6 py-4"> {product.ProductName}</td>
-        <td className="px-6 py-4">{product.CategoryID}</td>
+        <td className="px-6 py-4">{catname ? catname.name : "General"}</td>
         <td className="px-6 py-4">{product.Size || 0}</td>
-        <td className="px-6 py-4">{product.Type || "General"}</td>
+        <td className="px-6 py-4">{typename ? typename.name : "General"}</td>
         <td className="px-6 py-4">₹{product.UnitPrice}</td>
         <td className="px-6 py-4">{product.UnitsInStock}</td>
 
@@ -179,11 +206,11 @@ const ProductComponent = () => {
                       </label>
                       <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                         <div className="space-y-1 text-center">
-                          {_product.Image ? (
+                          {_product && _product.Image ? (
                             <img
                               className="h-32"
                               src={
-                                typeof (_product.Image) == "string"
+                                typeof _product.Image == "string"
                                   ? `${process.env.REACT_APP_SERVER_URL}/uploads/${_product.Image}`
                                   : URL.createObjectURL(_product.Image)
                               }
@@ -275,11 +302,15 @@ const ProductComponent = () => {
                           autoComplete="country-name"
                           className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                         >
-                          <option selected value="1">
-                            United States
-                          </option>
-                          <option value="2">Canada</option>
-                          <option value="3">Mexico</option>
+                          <option value="0">Select Category</option>
+
+                          {categories.map((category) => {
+                            return (
+                              <option value={category.id}>
+                                {category.name}
+                              </option>
+                            );
+                          })}
                         </select>
                       </div>
 
@@ -300,11 +331,11 @@ const ProductComponent = () => {
                           autoComplete="country-name"
                           className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                         >
-                          <option selected value="1">
-                            United States
-                          </option>
-                          <option value="2">Canada</option>
-                          <option value="3">Mexico</option>
+                          <option value="0">Select Type</option>
+
+                          {types.map((ty) => {
+                            return <option value={ty.id}>{ty.name}</option>;
+                          })}
                         </select>
                       </div>
 

@@ -9,7 +9,7 @@ import Home from '../../icons/Home.svg';
 import User from '../../icons/User.svg';
 import Box from '../../icons/Box.svg';
 import Cog from '../../icons/Cog.svg';
-
+import Options from '../../icons/Options.png';
 const SideNav = () => {
   return (
     <>
@@ -37,6 +37,20 @@ const SideNav = () => {
             <div className="w-1.5 bg-orange-500 rounded-r-3xl my-2 hidden"></div>
             <img
               src={User}
+              alt="home"
+              className="h-8 w-8 mx-auto my-4"
+            ></img>
+          </div>
+        </Link>
+        <Link
+          className="text-black 2xl:text-xl lg:text-md text-bold dark:text-white  "
+          id="customer"
+          to="/dashboard/options"
+        >
+          <div className=" flex">
+            <div className="w-1.5 bg-orange-500 rounded-r-3xl my-2 hidden"></div>
+            <img
+              src={Options}
               alt="home"
               className="h-8 w-8 mx-auto my-4"
             ></img>

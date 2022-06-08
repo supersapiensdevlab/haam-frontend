@@ -10,6 +10,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import CustomerListing from "./components/Customer/CustomerListing";
 import SideNav from "./components/SideNav/SideNav";
 import { useState, useEffect } from "react";
+import Options from "./components/Options/Options";
 
 function App() {
   //const user = JSON.parse(window.localStorage.getItem('user'));
@@ -46,6 +47,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />}>
               <Route path="customers" element={<CustomerListing />}></Route>
               <Route path="products" element={<ProductListing />}></Route>
+              <Route path="options" element={<Options />}></Route>
             </Route>
 
             <Route path="register" exact element={<RegisterPage />} />
