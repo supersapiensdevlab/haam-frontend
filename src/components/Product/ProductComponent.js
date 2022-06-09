@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -75,7 +75,25 @@ const ProductComponent = ({ filterPrice, filterType, filterCategory }) => {
   const categories = useSelector((state) => state.options.category);
   const types = useSelector((state) => state.options.type);
   const products = useSelector((state) => state.allProducts.products);
-  const renderList = products.map((product) => {
+
+  // For sorting
+  const [sortby, setSortBy] = useState(false);
+  const [sortorder, setSortOrder] = useState(true);
+  const [sortedProducts, setSortedProducts] = useState([]);
+  const sortByKey = (key) => (a, b) => a[key] > b[key] ? 1 : -1;
+  const sortByKeyDesc = (key) => (a, b) => a[key] < b[key] ? 1 : -1;
+
+  useEffect(() => {
+    if (sortby) {
+      if (sortorder)
+        setSortedProducts(products.slice().sort(sortByKey(sortby)));
+      else setSortedProducts(products.slice().sort(sortByKeyDesc(sortby)));
+    } else {
+      setSortedProducts(products);
+    }
+  }, [products, sortby, sortorder]);
+
+  const renderList = sortedProducts.map((product) => {
     if (filterCategory) {
       if (product.CategoryID != filterCategory) {
         return null;
@@ -147,6 +165,21 @@ const ProductComponent = ({ filterPrice, filterType, filterCategory }) => {
       </tr>
     );
   });
+  // for sorting
+  const handleSort = (att) =>{
+    let x = att;
+    if(x == sortby){
+      if(sortorder){
+        setSortOrder(false);
+        return;
+      }
+      setSortOrder(true);
+      setSortBy(false);
+      return
+    }
+    setSortOrder(true);
+    setSortBy(x)
+  }
 
   return (
     <div>
@@ -154,29 +187,29 @@ const ProductComponent = ({ filterPrice, filterType, filterCategory }) => {
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-100 dark:text-gray-500">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" onClick={()=>handleSort("ProductID")} className="px-6 py-3 cursor-pointer">
                 ID
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col"  className="px-6 py-3">
                 Photo
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" onClick={()=>handleSort("ProductName")} className="px-6 py-3 cursor-pointer">
                 Name
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" onClick={()=>handleSort("CategoryID")} className="px-6 py-3 cursor-pointer">
                 Category
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" onClick={()=>handleSort("Size")} className="px-6 py-3 cursor-pointer">
                 Size
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" onClick={()=>handleSort("Type")} className="px-6 py-3 cursor-pointer">
                 Type
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" onClick={()=>handleSort("UnitPrice")} className="px-6 py-3 cursor-pointer">
                 Price
               </th>
 
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" onClick={()=>handleSort("UnitsInStock")} className="px-6 py-3 cursor-pointer">
                 Stock
               </th>
               <th scope="col" className="px-6 py-3 text-left">
