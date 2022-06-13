@@ -11,6 +11,7 @@ import CustomerListing from "./components/Customer/CustomerListing";
 import SideNav from "./components/SideNav/SideNav";
 import { useState, useEffect } from "react";
 import Options from "./components/Options/Options";
+import Orders from "./components/Orders/Orders";
 
 function App() {
   //const user = JSON.parse(window.localStorage.getItem('user'));
@@ -48,6 +49,7 @@ function App() {
               <Route path="customers" element={<CustomerListing />}></Route>
               <Route path="products" element={<ProductListing />}></Route>
               <Route path="options" element={<Options />}></Route>
+              <Route path="orders" element={<Orders />}></Route>
             </Route>
 
             <Route path="register" exact element={<RegisterPage />} />

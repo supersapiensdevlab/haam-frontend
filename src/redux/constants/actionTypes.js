@@ -49,4 +49,6 @@ export const actionTypes = {
 
   GET_TYPE:'GET_TYPE',
   GET_CATEGORY:'GET_CATEGORY',
+
+  GET_ORDERS:'GET_ORDERS',
 };

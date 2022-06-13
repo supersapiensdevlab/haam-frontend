@@ -56,11 +56,20 @@ const SideNav = () => {
             ></img>
           </div>
         </Link>
-        <img
-          src={Box}
-          alt="box"
-          className="h-8 w-8 mx-auto my-4"
-        ></img>
+        <Link
+          className="text-black 2xl:text-xl lg:text-md text-bold dark:text-white  "
+          id="customer"
+          to="/dashboard/orders"
+        >
+          <div className=" flex">
+            <div className="w-1.5 bg-orange-500 rounded-r-3xl my-2 hidden"></div>
+            <img
+              src={Box}
+              alt="box"
+              className="h-8 w-8 mx-auto my-4"
+            ></img>
+          </div>
+        </Link>
         <img
           src={Cog}
           alt="cog"
