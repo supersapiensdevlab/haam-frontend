@@ -3,7 +3,7 @@ import LoginPage from "./components/AccessManager/LoginPage";
 import RegisterPage from "./components/AccessManager/RegisterPage";
 import AuthService from "./components/services/auth.service";
 import Header from "./components/Header";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import ProductListing from "./components/Product/ProductListing";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard/Dashboard";
@@ -12,15 +12,27 @@ import SideNav from "./components/SideNav/SideNav";
 import { useState, useEffect } from "react";
 import Options from "./components/Options/Options";
 import Orders from "./components/Orders/Orders";
+import { setUser } from "./redux/actions/userActions";
+import axios from "axios";
 
 function App() {
   //const user = JSON.parse(window.localStorage.getItem('user'));
   const [currentUser, setCurrentUser] = useState(undefined);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     const user = AuthService.getCurrentUser();
 
     if (user) {
+      axios
+        .get(`${process.env.REACT_APP_SERVER_URL}/auth/getcurrentuser`, {
+          headers: {
+            "x-auth-token": JSON.parse(localStorage.getItem("user"))
+              .accessToken,
+          },
+        }).then((data) => {
+          console.log(data)
+          dispatch(setUser(data.data));
+        }).catch((err) => console.log(err));
       setCurrentUser(user);
     }
   }, []);

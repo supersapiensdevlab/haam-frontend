@@ -10,7 +10,10 @@ import User from '../../icons/User.svg';
 import Box from '../../icons/Box.svg';
 import Cog from '../../icons/Cog.svg';
 import Options from '../../icons/Options.png';
+import Settings from "../Settings/Settings";
 const SideNav = () => {
+  const [show,setShow] = React.useState(false);
+
   return (
     <>
       <div className="w-20 shadow-md h-screen   py-6">
@@ -71,11 +74,13 @@ const SideNav = () => {
           </div>
         </Link>
         <img
+          onClick={()=>setShow(true)}
           src={Cog}
           alt="cog"
-          className="h-8 w-8 mx-auto my-4"
+          className="h-8 w-8 mx-auto my-4 cursor-pointer"
         ></img>
       </div>
+      <Settings show={show} setShow={setShow}></Settings>
     </>
   );
 };
