@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategory, getType } from "../../redux/actions/optionsActions";
 
@@ -17,9 +17,20 @@ function Options() {
   const handleTypeDeleteModal = () => {
     setShowTypeDelete((val) => !val);
   };
+
+  // For EDIT Modal
+  const [showTypeEdit, setShowTypeEdit] = React.useState(false);
+  const [showCategoryEdit, setShowCategoryEdit] = React.useState(false);
+  const handleCategoryEditModal = () => {
+    setShowCategoryEdit((val) => !val);
+  }; 
+  const handleTypeEditModal = () => {
+    setShowTypeEdit((val) => !val);
+  };
+
   const [name, setName] = useState("");
-  const [categoryId, setCategoryId] = useState();
-  const [typeId, setTypeId] = useState();
+  const [categoryId, setCategoryId] = useState(0);
+  const [typeId, setTypeId] = useState(0);
   const handleCategoryModal = () => {
     setShowCategory(!showCategory);
   };
@@ -145,6 +156,52 @@ function Options() {
     }
   }
   }
+
+// For Edit Submit
+const handleCategoryEditSubmit = async (e) => {
+  e.preventDefault();
+  try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/options/category-update`,
+        {id:categoryId,name:name},
+        {
+          headers: {
+            "x-auth-token": JSON.parse(localStorage.getItem("user"))
+              .accessToken,
+          },
+        }
+      );
+      console.log(res);
+      fetchCategory();
+      setName("");
+      setCategoryId(0);
+    } catch (ex) {
+      console.log(ex);
+    }
+}
+const handleTypeEditSubmit = async (e) => {
+  e.preventDefault();
+  try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/options/type-update`,
+        {id:typeId,name:name},
+        {
+          headers: {
+            "x-auth-token": JSON.parse(localStorage.getItem("user"))
+              .accessToken,
+          },
+        }
+      );
+      console.log(res);
+      fetchType();
+      setName("");
+      setTypeId(0);
+    } catch (ex) {
+      console.log(ex);
+    }
+}
+
+
   const categories = useSelector((state) => state.options.category);
   const renderCategoryList = categories.map((category) => {
     return (
@@ -171,6 +228,15 @@ function Options() {
             onClick={() => {
               setCategoryId(category.id);
               handleCategoryDeleteModal();
+            }}
+            className="h-6 w-6 text-orange-300 hover:text-orange-400 mx-2 cursor-pointer"
+            aria-hidden="true"
+          />
+           <FaEdit
+            onClick={() => {
+              setCategoryId(category.id);
+              setName(category.name);
+              handleCategoryEditModal();
             }}
             className="h-6 w-6 text-orange-300 hover:text-orange-400 mx-2 cursor-pointer"
             aria-hidden="true"
@@ -205,6 +271,16 @@ function Options() {
             onClick={() => {
               setTypeId(type.id);
               handleTypeDeleteModal();
+            }}
+            className="h-6 w-6 text-orange-300 hover:text-orange-400 mx-2 cursor-pointer"
+            aria-hidden="true"
+          />
+               <FaEdit
+            onClick={() => {
+              setTypeId(type.id);
+              setName(type.name);
+              handleTypeEditModal();
+
             }}
             className="h-6 w-6 text-orange-300 hover:text-orange-400 mx-2 cursor-pointer"
             aria-hidden="true"
@@ -427,6 +503,103 @@ function Options() {
           </div>
         </div>
       </Modal>
+      {/* For Edit  */}
+      <Modal show={showCategoryEdit} onHide={handleCategoryEditModal}>
+          <Modal.Header className="font-bold" closeButton>
+            Update Category
+          </Modal.Header>
+
+          <div className=" ">
+            <div className=" grid-cols-3   md:gap-6">
+              <div className="  md:col-span-3">
+                <form onSubmit={handleCategoryEditSubmit} method="POST">
+                  <div className="shadow overflow-hidden sm:rounded-md">
+                    <div className="  bg-white px-6">
+                      <div className="grid grid-cols-6 gap-6">
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="first-name"
+                            className="block text-sm font-medium text-gray-500"
+                          >
+                            Category Name
+                          </label>
+                          <input
+                            type="text"
+                            name="first-name"
+                            id="first-name"
+                              value={name}
+                              onChange={(e) => {
+                                setName( e.target.value);
+                              }}
+                            autoComplete="given-name"
+                            className="mt-1 focus:ring-orange-500 focus:border-orange-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                      <button
+                        onClick={handleCategoryEditModal}
+                        type="submit"
+                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-400 hover:bg-orange-500 focus:outline-none focus: focus:ring-orange-500"
+                      >
+                        Update Category
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </Modal>
+        <Modal show={showTypeEdit} onHide={handleCategoryEditModal}>
+          <Modal.Header className="font-bold" closeButton>
+            Update Type
+          </Modal.Header>
+
+          <div className=" ">
+            <div className=" grid-cols-3   md:gap-6">
+              <div className="  md:col-span-3">
+                <form onSubmit={handleTypeEditSubmit} method="POST">
+                  <div className="shadow overflow-hidden sm:rounded-md">
+                    <div className="  bg-white px-6">
+                      <div className="grid grid-cols-6 gap-6">
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="first-name"
+                            className="block text-sm font-medium text-gray-500"
+                          >
+                            Type Name
+                          </label>
+                          <input
+                            type="text"
+                            name="first-name"
+                            id="first-name"
+                              value={name}
+                              onChange={(e) => {
+                                setName( e.target.value);
+                              }}
+                            autoComplete="given-name"
+                            className="mt-1 focus:ring-orange-500 focus:border-orange-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                      <button
+                        onClick={handleTypeEditModal}
+                        type="submit"
+                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-400 hover:bg-orange-500 focus:outline-none focus: focus:ring-orange-500"
+                      >
+                        Update Type
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </>
     </>
   );
