@@ -552,7 +552,7 @@ const handleTypeEditSubmit = async (e) => {
             </div>
           </div>
         </Modal>
-        <Modal show={showTypeEdit} onHide={handleCategoryEditModal}>
+        <Modal show={showTypeEdit} onHide={handleTypeEditModal}>
           <Modal.Header className="font-bold" closeButton>
             Update Type
           </Modal.Header>
