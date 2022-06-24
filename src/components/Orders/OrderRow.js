@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
-function OrderRow({ order, product, typename, catname }) {
+function OrderRow({ order, product, typename, catname ,setCurrentOrder,handleDeleteModal, handleModal}) {
   const categories = useSelector((state) => state.options.category);
   const types = useSelector((state) => state.options.type);
   const products = useSelector((state) => state.allProducts.products);
@@ -39,18 +39,18 @@ function OrderRow({ order, product, typename, catname }) {
 
         <td className="px-6 py-4  flex align-middle items-center mt-4  text-center">
           <FaTrash
-            //   onClick={() => {
-            //     set_Product(product);
-            //     handleDeleteModal();
-            //   }}
+              onClick={() => {
+                setCurrentOrder(order);
+                handleDeleteModal();
+              }}
             className="h-6 w-6 text-orange-300 hover:text-orange-400 mx-2 cursor-pointer"
             aria-hidden="true"
           />
           <FaEdit
-            //   onClick={() => {
-            //     set_Product(product);
-            //     handleModal();
-            //   }}
+              onClick={() => {
+                setCurrentOrder(order);
+                handleModal();
+              }}
             className="h-6 w-6 text-orange-300 hover:text-orange-400 mx-2 cursor-pointer"
             aria-hidden="true"
           />
@@ -112,6 +112,12 @@ function OrderRow({ order, product, typename, catname }) {
                 <h7 className="text-xs">QuantityOrdered</h7>
                 <h6 className="text-black text-md border-black border-b mt-1 mb-2">
                   {order.QuantityOrdered}
+                </h6>
+              </div>
+              <div className="pr-16">
+                <h7 className="text-xs">Customer ID</h7>
+                <h6 className="text-black text-md border-black border-b mt-1 mb-2">
+                  {order.CustomerID}
                 </h6>
               </div>
             </div>

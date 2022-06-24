@@ -9,7 +9,7 @@ export const customerReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case actionTypes.SET_CUSTOMERS:
       return {
-        state,
+        ...state,
         customers: payload,
         loading: false,
       };

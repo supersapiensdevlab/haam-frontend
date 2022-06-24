@@ -166,20 +166,20 @@ const ProductComponent = ({ filterPrice, filterType, filterCategory }) => {
     );
   });
   // for sorting
-  const handleSort = (att) =>{
+  const handleSort = (att) => {
     let x = att;
-    if(x == sortby){
-      if(sortorder){
+    if (x == sortby) {
+      if (sortorder) {
         setSortOrder(false);
         return;
       }
       setSortOrder(true);
       setSortBy(false);
-      return
+      return;
     }
     setSortOrder(true);
-    setSortBy(x)
-  }
+    setSortBy(x);
+  };
 
   return (
     <div>
@@ -187,29 +187,57 @@ const ProductComponent = ({ filterPrice, filterType, filterCategory }) => {
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-100 dark:text-gray-500">
             <tr>
-              <th scope="col" onClick={()=>handleSort("ProductID")} className="px-6 py-3 cursor-pointer">
+              <th
+                scope="col"
+                onClick={() => handleSort("ProductID")}
+                className="px-6 py-3 cursor-pointer"
+              >
                 ID
               </th>
-              <th scope="col"  className="px-6 py-3">
+              <th scope="col" className="px-6 py-3">
                 Photo
               </th>
-              <th scope="col" onClick={()=>handleSort("ProductName")} className="px-6 py-3 cursor-pointer">
+              <th
+                scope="col"
+                onClick={() => handleSort("ProductName")}
+                className="px-6 py-3 cursor-pointer"
+              >
                 Name
               </th>
-              <th scope="col" onClick={()=>handleSort("CategoryID")} className="px-6 py-3 cursor-pointer">
+              <th
+                scope="col"
+                onClick={() => handleSort("CategoryID")}
+                className="px-6 py-3 cursor-pointer"
+              >
                 Category
               </th>
-              <th scope="col" onClick={()=>handleSort("Size")} className="px-6 py-3 cursor-pointer">
+              <th
+                scope="col"
+                onClick={() => handleSort("Size")}
+                className="px-6 py-3 cursor-pointer"
+              >
                 Size
               </th>
-              <th scope="col" onClick={()=>handleSort("Type")} className="px-6 py-3 cursor-pointer">
+              <th
+                scope="col"
+                onClick={() => handleSort("Type")}
+                className="px-6 py-3 cursor-pointer"
+              >
                 Type
               </th>
-              <th scope="col" onClick={()=>handleSort("UnitPrice")} className="px-6 py-3 cursor-pointer">
+              <th
+                scope="col"
+                onClick={() => handleSort("UnitPrice")}
+                className="px-6 py-3 cursor-pointer"
+              >
                 Price
               </th>
 
-              <th scope="col" onClick={()=>handleSort("UnitsInStock")} className="px-6 py-3 cursor-pointer">
+              <th
+                scope="col"
+                onClick={() => handleSort("UnitsInStock")}
+                className="px-6 py-3 cursor-pointer"
+              >
                 Stock
               </th>
               <th scope="col" className="px-6 py-3 text-left">

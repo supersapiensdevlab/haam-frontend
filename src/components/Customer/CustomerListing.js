@@ -59,7 +59,7 @@ const CustomerListing = () => {
       <div className="flex flex-col w-full pt-5">
         <h2 className=" font-bold text-lg">Customers</h2>
         <div className="flex items-center my-2">
-          <DropDown /> <DropDown /> <DropDown /> <DropDown />{" "}
+         
           <div
             onClick={handleModal}
             className="cursor-pointer inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-400 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"

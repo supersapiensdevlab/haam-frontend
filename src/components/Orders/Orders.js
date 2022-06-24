@@ -7,7 +7,9 @@ import DropDown from "../DropDown/DropDown";
 import { setProducts } from "../../redux/actions/productActions";
 import OrderComponent from "./OrderComponent";
 import { Modal } from "react-bootstrap";
-
+import { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/solid";
 function Orders() {
   const oeders = useSelector((state) => state.orders);
   const dispatch = useDispatch();
@@ -17,7 +19,7 @@ function Orders() {
     RequiredDate: "",
     ShippedDate: "",
     Comment: "",
-    Status: "",
+    Status: "Placed",
     ProductID: "",
     QuantityOrdered: 1,
   });
@@ -64,8 +66,18 @@ function Orders() {
     return classes.filter(Boolean).join(" ");
   }
 
+  // Status filter
+  const [filterStatus, setFilterStatus] = useState(false);
+  const filters = [
+    "Placed",
+    "Dispatched",
+    "Cancelled",
+    "Refunded",
+    "Completed",
+  ];
+
   // handle Add Order
-  const handleSubmit =  async( e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post(
@@ -83,14 +95,66 @@ function Orders() {
     } catch (ex) {
       console.log(ex);
     }
-  }
+  };
 
   return (
     <>
       <div className="flex flex-col w-full pt-5">
         <h2 className=" font-bold text-lg">Orders</h2>
         <div className="flex items-center my-2">
-          <DropDown />
+          <Menu as="div" className="relative inline-block text-left mr-5 ml-5 z-10">
+            <div>
+              <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring   focus:ring-offset-gray-100 focus:ring-orange-500">
+               {filterStatus ? filterStatus : "Status"}
+                <ChevronDownIcon
+                  className="-mr-1 ml-2 h-5 w-5"
+                  aria-hidden="true"
+                />
+              </Menu.Button>
+            </div>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="py-1">
+                  {filters.map((fil) => {
+                    return (
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            className="px-1 py-2 hover:bg-slate-200 cursor-pointer"
+                            onClick={() => {
+                              setFilterStatus(fil);
+                            }}
+                          >
+                          {fil}
+                          </div>
+                        )}
+                      </Menu.Item>
+                    );
+                  })}
+                  <Menu.Item>
+                    {({ active }) => (
+                      <div
+                        className="px-1 py-2 hover:bg-slate-200 cursor-pointer"
+                        onClick={() => {
+                          setFilterStatus(false);
+                        }}
+                      >
+                        All
+                      </div>
+                    )}
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
           <div
             onClick={handleModal}
             className="cursor-pointer inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-400 hover:bg-orange-500 focus:outline-none focus: focus:ring-orange-500"
@@ -98,7 +162,7 @@ function Orders() {
             + Add Orders
           </div>
         </div>
-        <OrderComponent />
+        <OrderComponent filterStatus={filterStatus} fetchOrders={fetchOrders} />
       </div>
       <Modal show={show} onHide={handleModal}>
         <Modal.Header className="font-bold" closeButton>
@@ -236,8 +300,7 @@ function Orders() {
                         >
                           Status
                         </label>
-                        <input
-                          type="text"
+                        <select
                           name="first-name"
                           id="first-name"
                           value={order.Status}
@@ -246,7 +309,13 @@ function Orders() {
                           }}
                           autoComplete="given-name"
                           className="mt-1 focus:ring-orange-500 focus:border-orange-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        />
+                        >
+                          <option value="Placed">Placed</option>
+                          <option value="Dispatched">Dispatched</option>
+                          <option value="Cancelled">Cancelled</option>
+                          <option value="Refunded">Refunded</option>
+                          <option value="Completed">Completed</option>
+                        </select>
                       </div>
                       <div className="col-span-6 sm:col-span-3">
                         <label

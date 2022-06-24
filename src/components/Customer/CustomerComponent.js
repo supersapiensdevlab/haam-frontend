@@ -23,7 +23,7 @@ const CustomerComponent = () => {
   };
 
   const handleDeleteModal = () => {
-    setShowDelete((val)=>!val);
+    setShowDelete((val) => !val);
     console.log("Delete Modal Visibile ->", show);
   };
 
@@ -39,7 +39,15 @@ const CustomerComponent = () => {
   // });
 
   const updateCustomer = async (user) => {
-    postService.updateCustomer(user).then((response) => {
+    const formData = new FormData();
+    formData.append("image", user.image);
+    formData.append("name", user.name);
+    formData.append("email", user.email);
+    formData.append("phone", user.phone);
+    // formData.append("password", user.password);
+    // formData.append("confirm", user.confirm);
+
+    postService.updateCustomer(formData).then((response) => {
       console.log("Response from updateCustomer ->", response);
       fetchCustomers();
     });
@@ -69,7 +77,7 @@ const CustomerComponent = () => {
           {customer.CustomerID}
         </th>
         <td className="px-6 py-4">
-        <img
+          <img
             className="rounded w-24 h-2w-24"
             src={
               customer.Image
@@ -87,6 +95,7 @@ const CustomerComponent = () => {
           <FaTrash
             onClick={() => {
               _setUser({
+                image: customer.Image,
                 name: customer.Name,
                 email: customer.Email,
                 phone: customer.Phone,
@@ -100,6 +109,7 @@ const CustomerComponent = () => {
           <FaEdit
             onClick={() => {
               _setUser({
+                image: customer.Image,
                 name: customer.Name,
                 email: customer.Email,
                 phone: customer.Phone,
@@ -278,20 +288,43 @@ const CustomerComponent = () => {
                     </label>
                     <div className="mt-1 flex items-center">
                       <span className="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                        <svg
-                          className="h-full w-full text-gray-300"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
+                        {user.image ? (
+                          <img
+                            src={
+                              typeof user.image == "string"
+                                ? `${process.env.REACT_APP_SERVER_URL}/uploads/${user.image}`
+                                : URL.createObjectURL(user.image)
+                            }
+                          ></img>
+                        ) : (
+                          <svg
+                            className="h-full w-full text-gray-300"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                          </svg>
+                        )}
                       </span>
-                      <button
-                        type="button"
+                      <label
+                        htmlFor="file-upload2"
                         className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       >
+                        {" "}
+                        <input
+                          id="file-upload2"
+                          name="file-upload"
+                          type="file"
+                          className="sr-only"
+                          onChange={(e) => {
+                            _setUser({
+                              ...user,
+                              image: e.target.files[0],
+                            });
+                          }}
+                        />
                         Change
-                      </button>
+                      </label>
                     </div>
                   </div>
                   <div className="grid grid-cols-6 gap-6">
